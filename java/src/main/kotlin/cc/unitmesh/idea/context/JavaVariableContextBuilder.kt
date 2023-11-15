@@ -18,17 +18,29 @@ class JavaVariableContextBuilder : VariableContextBuilder {
 
         val references =
             if (gatherUsages) JavaContextCollectionUtilsKt.findUsages(psiElement as PsiNameIdentifierOwner) else emptyList()
-
-        return VariableContext(
-            psiElement,
-            psiElement.text,
-            psiElement.name,
-            containingMethod,
-            containingClass,
-            references,
-            includeMethodContext,
-            includeClassContext
-        )
+        if (psiElement.name.equals("log")){
+            return VariableContext(
+                    psiElement,
+                    "Logger log",
+                    psiElement.name,
+                    containingMethod,
+                    containingClass,
+                    references,
+                    includeMethodContext,
+                    includeClassContext
+            )
+        }else {
+            return VariableContext(
+                    psiElement,
+                    psiElement.text,
+                    psiElement.name,
+                    containingMethod,
+                    containingClass,
+                    references,
+                    includeMethodContext,
+                    includeClassContext
+            )
+        }
     }
 }
 

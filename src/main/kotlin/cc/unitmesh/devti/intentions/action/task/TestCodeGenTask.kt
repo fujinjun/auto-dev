@@ -24,9 +24,10 @@ import com.intellij.openapi.vfs.VirtualFile
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.runBlocking
+import kotlin.math.abs
 
 class TestCodeGenTask(val request: TestCodeGenRequest) :
-    Task.Backgroundable(request.project, AutoDevBundle.message("intentions.chat.code.test.name")) {
+        Task.Backgroundable(request.project, AutoDevBundle.message("intentions.chat.code.test.name")) {
 
     private val actionType = ChatActionType.GENERATE_TEST
     private val lang = request.file.language.displayName
@@ -65,46 +66,47 @@ class TestCodeGenTask(val request: TestCodeGenRequest) :
         indicator.fraction = 0.3
 
         val creationContext =
-            ChatCreationContext(ChatOrigin.Intention, actionType, request.file, listOf(), element = request.element)
+                ChatCreationContext(ChatOrigin.Intention, actionType, request.file, listOf(), element = request.element)
 
         val contextItems: List<ChatContextItem> = runBlocking {
             return@runBlocking ChatContextProvider.collectChatContextList(request.project, creationContext)
         }
 
-        contextItems.forEach {
-            prompter += it.text + "\n"
+//        contextItems.forEach {
+//            prompter += it.text + "\n"
+//        }
+
+//        prompter += "\n"
+//        prompter += ReadAction.compute<String, Throwable> {
+//            if (testContext.relatedClasses.isEmpty()) {
+//                return@compute ""
+//            }
+//
+//            val relatedClasses = testContext.relatedClasses.joinToString("\n") {
+//                it.format()
+//            }.lines().joinToString("\n") {
+//                "// $it"
+//            }
+//
+//            "// here are related classes:\n$relatedClasses"
+//        }
+//        prompter = ""
+
+//        if (testContext.currentClass != null) {
+//            prompter += "\n"
+//            prompter += "// here is current class information:\n"
+//            prompter += testContext.currentClass.format()
+//        }
+        if (prompter.length > abs(7000 - request.selectText.length)) {
+            prompter = prompter.substring(0..abs(7000 - request.selectText.length))
         }
-
-        prompter += "\n"
-        prompter += ReadAction.compute<String, Throwable> {
-            if (testContext.relatedClasses.isEmpty()) {
-                return@compute ""
-            }
-
-            val relatedClasses = testContext.relatedClasses.joinToString("\n") {
-                it.format()
-            }.lines().joinToString("\n") {
-                "// $it"
-            }
-
-            "// here are related classes:\n$relatedClasses"
-        }
-
-        if (testContext.currentClass != null) {
-            prompter += "\n"
-            prompter += "// here is current class information:\n"
-            prompter += testContext.currentClass.format()
-        }
-
         prompter += "\n```${lang.lowercase()}\n${request.selectText}\n```\n"
-        prompter += if (!testContext.isNewFile) {
+        prompter +=
             "Start test code with `@Test` syntax here:  \n"
-        } else {
-            "Start ${testContext.testClassName} with `import` syntax here:  \n"
-        }
+
 
         val flow: Flow<String> =
-            LlmFactory().create(request.project).stream(prompter, "")
+                LlmFactory().create(request.project).stream(prompter, "")
 
         logger<AutoTestThisIntention>().info("Prompt: $prompter")
 
@@ -120,9 +122,9 @@ class TestCodeGenTask(val request: TestCodeGenRequest) :
     }
 
     private suspend fun writeTestToFile(
-        project: Project,
-        flow: Flow<String>,
-        context: TestFileContext,
+            project: Project,
+            flow: Flow<String>,
+            context: TestFileContext,
     ) {
         val suggestion = StringBuilder()
         flow.collect(suggestion::append)
@@ -130,7 +132,7 @@ class TestCodeGenTask(val request: TestCodeGenRequest) :
         logger.info("LLM suggestion: $suggestion")
 
         val modifier = CodeModifierProvider().modifier(context.language)
-            ?: throw IllegalStateException("Unsupported language: ${context.language}")
+                ?: throw IllegalStateException("Unsupported language: ${context.language}")
 
         parseCodeFromString(suggestion.toString()).forEach {
             modifier.insertTestCode(context.file, project, it)
