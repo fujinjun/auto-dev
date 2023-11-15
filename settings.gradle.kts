@@ -7,12 +7,5 @@ include("experiment")
 include("plugin")
 
 include(
-    "pycharm",
-    "java",
-    "kotlin",
-    "webstorm",
-    "goland",
-    "rust",
-    "csharp",
-    "cpp",
+    "java"
 )

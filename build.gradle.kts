@@ -54,47 +54,25 @@ fun prop(name: String): String =
 
 val basePluginArchiveName = "intellij-autodev"
 
-val javaScriptPlugins = listOf("JavaScript")
-val pycharmPlugins = listOf("PythonCore")
 val javaPlugins = listOf("com.intellij.java", "org.jetbrains.kotlin")
 //val kotlinPlugins = listOf("org.jetbrains.kotlin")
-val clionVersion = prop("clionVersion")
-
-// https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html#modules-specific-to-functionality
-val clionPlugins = listOf(
-    "com.intellij.cidr.base",
-    "com.intellij.cidr.lang",
-    "com.intellij.clion",
-    "org.rust.lang:0.4.186.5143-223",
-    "org.toml.lang"
-)
-val riderVersion = prop("riderVersion")
-val riderPlugins: List<String> = listOf()
-
 val pluginProjects: List<Project> get() = rootProject.allprojects.toList()
 val ideaPlugins =
     listOf(
         "Git4Idea",
         "com.intellij.java",
         "org.jetbrains.plugins.gradle",
-        "org.jetbrains.kotlin",
-        "JavaScript"
+        "org.jetbrains.kotlin"
     )
 
 val baseIDE = prop("baseIDE")
 val platformVersion = prop("platformVersion").toInt()
 val ideaVersion = prop("ideaVersion")
-val golandVersion = prop("golandVersion")
-val pycharmVersion = prop("pycharmVersion")
 
 
 val baseVersion = when (baseIDE) {
     "idea" -> ideaVersion
-    "pycharm" -> pycharmVersion
-    "goland" -> golandVersion
 //    "webstorm" -> prop("webstormVersion")
-    "clion" -> clionVersion
-    "rider" -> riderVersion
     else -> error("Unexpected IDE name: `$baseIDE`")
 }
 
@@ -106,6 +84,11 @@ allprojects {
     }
 
     repositories {
+        mavenLocal()
+//        maven {
+//            setUrl("https://maven.aliyun.com/repository/central/")
+//        }
+
         mavenCentral()
         maven("https://cache-redirector.jetbrains.com/repo.maven.apache.org/maven2")
         maven("https://cache-redirector.jetbrains.com/intellij-dependencies")
@@ -202,8 +185,6 @@ project(":plugin") {
         val pluginList: MutableList<String> = mutableListOf("Git4Idea")
         if (baseIDE == "idea") {
             pluginList += javaPlugins
-        } else if (baseIDE == "pycharm") {
-            pluginList += pycharmPlugins
         }
         plugins.set(pluginList)
     }
@@ -211,12 +192,6 @@ project(":plugin") {
     dependencies {
         implementation(project(":"))
         implementation(project(":java"))
-        implementation(project(":kotlin"))
-        implementation(project(":pycharm"))
-        implementation(project(":webstorm"))
-        implementation(project(":goland"))
-        implementation(project(":rust"))
-        implementation(project(":cpp"))
     }
 
     // Collects all jars produced by compilation of project modules and merges them into singe one.
@@ -389,16 +364,6 @@ project(":") {
     }
 }
 
-project(":pycharm") {
-    intellij {
-        version.set(pycharmVersion)
-        plugins.set(pycharmPlugins)
-    }
-    dependencies {
-        implementation(project(":"))
-    }
-}
-
 
 project(":experiment") {
     version = prop("pluginVersion")
@@ -515,67 +480,6 @@ project(":java") {
     intellij {
         version.set(ideaVersion)
         plugins.set(ideaPlugins)
-    }
-    dependencies {
-        implementation(project(":"))
-    }
-}
-
-project(":webstorm") {
-    intellij {
-        version.set(ideaVersion)
-        plugins.set(javaScriptPlugins)
-    }
-    dependencies {
-        implementation(project(":"))
-    }
-}
-
-project(":kotlin") {
-    intellij {
-        version.set(ideaVersion)
-        plugins.set(ideaPlugins)
-    }
-    dependencies {
-        implementation(project(":"))
-        implementation(project(":java"))
-    }
-}
-
-project(":rust") {
-    intellij {
-        version.set(clionVersion)
-        plugins.set(clionPlugins)
-    }
-    dependencies {
-        implementation(project(":"))
-    }
-}
-
-project(":cpp") {
-    intellij {
-        version.set(clionVersion)
-        plugins.set(clionPlugins)
-    }
-    dependencies {
-        implementation(project(":"))
-    }
-}
-
-project(":csharp") {
-    intellij {
-        version.set(riderVersion)
-        plugins.set(riderPlugins)
-    }
-    dependencies {
-        implementation(project(":"))
-    }
-}
-
-project(":goland") {
-    intellij {
-        version.set(golandVersion)
-        plugins.set(listOf("org.jetbrains.plugins.go"))
     }
     dependencies {
         implementation(project(":"))

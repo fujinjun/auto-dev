@@ -29,21 +29,27 @@ class JavaLivingDocumentation : LivingDocumentation {
         val project = target.project
         val codeStyleManager = CodeStyleManager.getInstance(project)
         val file = target.containingFile
+        val newDocFixed = newDoc.replace("```java","").replace("```","").trim()
         WriteCommandAction.runWriteCommandAction(project, "Living Document", "cc.unitmesh.livingDoc", {
             val startOffset = target.textRange.startOffset
-            val newEndOffset = startOffset + newDoc.length
+            val newEndOffset = startOffset + newDocFixed.length
 
             when (type) {
                 LivingDocumentationType.COMMENT -> {
                     val psiElementFactory = JavaPsiFacade.getElementFactory(project)
-                    val newDocComment = psiElementFactory.createDocCommentFromText(newDoc)
+                    val newMethod = psiElementFactory.createMethodFromText(newDocFixed, null);
+                    val newDocComment = newMethod.docComment
 
                     if (target is PsiDocCommentOwner) {
                         val oldDocComment = target.docComment
                         if (oldDocComment != null) {
-                            oldDocComment.replace(newDocComment)
+                            if (newDocComment != null) {
+                                oldDocComment.replace(newDocComment)
+                            }
                         } else {
-                            target.addBefore(newDocComment, target.firstChild)
+                            if (newDocComment != null) {
+                                target.addBefore(newDocComment, target.firstChild)
+                            }
                         }
                     } else {
                         throw IncorrectOperationException("Unable to update documentation")
@@ -51,12 +57,12 @@ class JavaLivingDocumentation : LivingDocumentation {
                 }
 
                 LivingDocumentationType.ANNOTATED -> {
-                    editor.document.insertString(startOffset, newDoc)
+                    editor.document.insertString(startOffset, newDocFixed)
                     codeStyleManager.reformatText(file, startOffset, newEndOffset)
                 }
 
                 LivingDocumentationType.CUSTOM -> {
-                    editor.document.insertString(startOffset, newDoc)
+                    editor.document.insertString(startOffset, newDocFixed)
                     codeStyleManager.reformatText(file, startOffset, newEndOffset)
                 }
             }
