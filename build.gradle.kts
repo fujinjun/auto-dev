@@ -337,6 +337,8 @@ project(":") {
 
         implementation("cc.unitmesh:cocoa-core:0.4.2")
         implementation("cc.unitmesh:git-commit-message:0.4.2")
+        implementation("com.alibaba:dashscope-sdk-java:2.8.2")
+
 
         // kanban
         implementation(libs.github.api)

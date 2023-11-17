@@ -14,7 +14,8 @@ import com.intellij.util.IncorrectOperationException
 class JavaLivingDocumentation : LivingDocumentation {
     override val forbiddenRules: List<String> = listOf(
         "do not return example code",
-        "do not use @author and @version tags"
+        "do not use @author and @version tags",
+        "just return the method comment"
     )
 
     override fun startEndString(type: LivingDocumentationType): Pair<String, String> {

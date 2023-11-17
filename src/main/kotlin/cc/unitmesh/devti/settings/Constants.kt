@@ -1,10 +1,10 @@
 package cc.unitmesh.devti.settings
 
 val OPENAI_MODEL = arrayOf("gpt-3.5-turbo","gpt-3.5-turbo-16k", "gpt-4")
-val AI_ENGINES = arrayOf("OpenAI", "Custom", "Azure", "XingHuo")
+val AI_ENGINES = arrayOf("OpenAI", "Custom", "Azure", "XingHuo","Qwen")
 
 enum class AIEngines {
-    OpenAI, Custom, Azure, XingHuo
+    OpenAI, Custom, Azure, XingHuo,Qwen
 }
 
 val GIT_TYPE = arrayOf("Github" , "Gitlab")

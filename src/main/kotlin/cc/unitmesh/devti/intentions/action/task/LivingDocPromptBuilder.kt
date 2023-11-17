@@ -105,11 +105,11 @@ open class LivingDocPromptBuilder(
 
             instruction.append(basicInstruction)
 
-            if (inOutString.isNotEmpty()) {
-                instruction.append("\nCompare this snippet: \n")
-                instruction.append(inOutString)
-                instruction.append("\n")
-            }
+//            if (inOutString.isNotEmpty()) {
+//                instruction.append("\nCompare this snippet: \n")
+//                instruction.append(inOutString)
+//                instruction.append("\n")
+//            }
 
             instruction.append("```${target.language.displayName}\n${target.text}\n```")
 

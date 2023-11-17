@@ -148,6 +148,16 @@
             <categoryKey>intention.category.llm</categoryKey>
         </autoDevIntention>
         <autoDevIntention>
+            <className>cc.unitmesh.devti.intentions.action.FindLessUsageIntention</className>
+            <bundleName>messages.AutoDevBundle</bundleName>
+            <categoryKey>intention.category.llm</categoryKey>
+        </autoDevIntention>
+        <autoDevIntention>
+            <className>cc.unitmesh.devti.intentions.action.RefactorMethodIntention</className>
+            <bundleName>messages.AutoDevBundle</bundleName>
+            <categoryKey>intention.category.llm</categoryKey>
+        </autoDevIntention>
+        <autoDevIntention>
             <className>cc.unitmesh.devti.intentions.action.CodeCompletionIntention</className>
             <bundleName>messages.AutoDevBundle</bundleName>
             <categoryKey>intention.category.llm</categoryKey>

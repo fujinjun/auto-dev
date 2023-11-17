@@ -36,10 +36,10 @@ class GeneratePumlIntention : AbstractChatIntention() {
         var selectedText = "public class " + classPsi.name + "{"
         classPsi.children.filter { it is PsiField||it is PsiMethod }.forEach {
             selectedText += if (it is PsiField){
-                "\n" + it.text
+                "\n" + it.text + "\n"
             }else{
                 val method = it as PsiMethod
-                method.text.substring(0,method.text.indexOf("{")) + "{}"
+                method.text.substring(0,method.text.indexOf("{")) + "{}\n"
             }
         }
         selectedText += "}"
