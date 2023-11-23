@@ -21,12 +21,12 @@
 
     <!--suppress PluginXmlValidity -->
     <content>
-        <module name="cc.unitmesh.pycharm"/>
+<!--        <module name="cc.unitmesh.pycharm"/>-->
         <module name="cc.unitmesh.idea"/>
-        <module name="cc.unitmesh.kotlin"/>
-        <module name="cc.unitmesh.webstorm"/>
-        <module name="cc.unitmesh.goland"/>
-        <module name="cc.unitmesh.rust"/>
-        <module name="cc.unitmesh.cpp"/>
+<!--        <module name="cc.unitmesh.kotlin"/>-->
+<!--        <module name="cc.unitmesh.webstorm"/>-->
+<!--        <module name="cc.unitmesh.goland"/>-->
+<!--        <module name="cc.unitmesh.rust"/>-->
+<!--        <module name="cc.unitmesh.cpp"/>-->
     </content>
 </idea-plugin>

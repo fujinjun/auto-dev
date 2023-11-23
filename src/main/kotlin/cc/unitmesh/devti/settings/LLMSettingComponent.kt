@@ -83,6 +83,10 @@ class LLMSettingComponent(private val settings: AutoDevSettingsState) {
             xingHuoApiKeyParam,
             xingHuoApiSecretParam,
         ),
+        AIEngines.Qwen to listOf(
+                customEngineServerParam,
+                customEngineTokenParam,
+        ),
     )
 
 

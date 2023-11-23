@@ -3,6 +3,7 @@ package cc.unitmesh.devti.llms
 import cc.unitmesh.devti.llms.azure.AzureOpenAIProvider
 import cc.unitmesh.devti.llms.custom.CustomLLMProvider
 import cc.unitmesh.devti.llms.openai.OpenAIProvider
+import cc.unitmesh.devti.llms.qwen.QwenLLMProvider
 import cc.unitmesh.devti.llms.xianghuo.XingHuoProvider
 import cc.unitmesh.devti.settings.AIEngines
 import cc.unitmesh.devti.settings.AutoDevSettingsState
@@ -21,6 +22,7 @@ class LlmFactory {
             AIEngines.Custom -> project.getService(CustomLLMProvider::class.java)
             AIEngines.Azure -> project.getService(AzureOpenAIProvider::class.java)
             AIEngines.XingHuo -> project.getService(XingHuoProvider::class.java)
+            AIEngines.Qwen -> project.getService(QwenLLMProvider::class.java)
         }
     }
 }

@@ -77,8 +77,8 @@ val ideaPlugins =
         "Git4Idea",
         "com.intellij.java",
         "org.jetbrains.plugins.gradle",
-        "org.jetbrains.kotlin",
-        "JavaScript"
+        "org.jetbrains.kotlin"
+//        "JavaScript"
     )
 
 val baseIDE = prop("baseIDE")
@@ -211,12 +211,12 @@ project(":plugin") {
     dependencies {
         implementation(project(":"))
         implementation(project(":java"))
-        implementation(project(":kotlin"))
-        implementation(project(":pycharm"))
-        implementation(project(":webstorm"))
-        implementation(project(":goland"))
-        implementation(project(":rust"))
-        implementation(project(":cpp"))
+//        implementation(project(":kotlin"))
+//        implementation(project(":pycharm"))
+//        implementation(project(":webstorm"))
+//        implementation(project(":goland"))
+//        implementation(project(":rust"))
+//        implementation(project(":cpp"))
     }
 
     // Collects all jars produced by compilation of project modules and merges them into singe one.
@@ -362,6 +362,8 @@ project(":") {
 
         implementation("cc.unitmesh:cocoa-core:0.4.2")
         implementation("cc.unitmesh:git-commit-message:0.4.2")
+        implementation("com.alibaba:dashscope-sdk-java:2.8.2")
+
 
         // kanban
         implementation(libs.github.api)
@@ -389,15 +391,15 @@ project(":") {
     }
 }
 
-project(":pycharm") {
-    intellij {
-        version.set(pycharmVersion)
-        plugins.set(pycharmPlugins)
-    }
-    dependencies {
-        implementation(project(":"))
-    }
-}
+//project(":pycharm") {
+//    intellij {
+//        version.set(pycharmVersion)
+//        plugins.set(pycharmPlugins)
+//    }
+//    dependencies {
+//        implementation(project(":"))
+//    }
+//}
 
 
 project(":experiment") {
@@ -521,66 +523,66 @@ project(":java") {
     }
 }
 
-project(":webstorm") {
-    intellij {
-        version.set(ideaVersion)
-        plugins.set(javaScriptPlugins)
-    }
-    dependencies {
-        implementation(project(":"))
-    }
-}
+//project(":webstorm") {
+//    intellij {
+//        version.set(ideaVersion)
+//        plugins.set(javaScriptPlugins)
+//    }
+//    dependencies {
+//        implementation(project(":"))
+//    }
+//}
 
-project(":kotlin") {
-    intellij {
-        version.set(ideaVersion)
-        plugins.set(ideaPlugins)
-    }
-    dependencies {
-        implementation(project(":"))
-        implementation(project(":java"))
-    }
-}
+//project(":kotlin") {
+//    intellij {
+//        version.set(ideaVersion)
+//        plugins.set(ideaPlugins)
+//    }
+//    dependencies {
+//        implementation(project(":"))
+//        implementation(project(":java"))
+//    }
+//}
 
-project(":rust") {
-    intellij {
-        version.set(clionVersion)
-        plugins.set(clionPlugins)
-    }
-    dependencies {
-        implementation(project(":"))
-    }
-}
-
-project(":cpp") {
-    intellij {
-        version.set(clionVersion)
-        plugins.set(clionPlugins)
-    }
-    dependencies {
-        implementation(project(":"))
-    }
-}
-
-project(":csharp") {
-    intellij {
-        version.set(riderVersion)
-        plugins.set(riderPlugins)
-    }
-    dependencies {
-        implementation(project(":"))
-    }
-}
-
-project(":goland") {
-    intellij {
-        version.set(golandVersion)
-        plugins.set(listOf("org.jetbrains.plugins.go"))
-    }
-    dependencies {
-        implementation(project(":"))
-    }
-}
+//project(":rust") {
+//    intellij {
+//        version.set(clionVersion)
+//        plugins.set(clionPlugins)
+//    }
+//    dependencies {
+//        implementation(project(":"))
+//    }
+//}
+//
+//project(":cpp") {
+//    intellij {
+//        version.set(clionVersion)
+//        plugins.set(clionPlugins)
+//    }
+//    dependencies {
+//        implementation(project(":"))
+//    }
+//}
+//
+//project(":csharp") {
+//    intellij {
+//        version.set(riderVersion)
+//        plugins.set(riderPlugins)
+//    }
+//    dependencies {
+//        implementation(project(":"))
+//    }
+//}
+//
+//project(":goland") {
+//    intellij {
+//        version.set(golandVersion)
+//        plugins.set(listOf("org.jetbrains.plugins.go"))
+//    }
+//    dependencies {
+//        implementation(project(":"))
+//    }
+//}
 
 fun File.isPluginJar(): Boolean {
     if (!isFile) return false
