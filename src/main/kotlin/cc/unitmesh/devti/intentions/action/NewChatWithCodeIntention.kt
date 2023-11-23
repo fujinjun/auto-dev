@@ -9,7 +9,7 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
 
-class NewChatWithCodeIntention : AbstractChatIntention() {
+open class NewChatWithCodeIntention : AbstractChatIntention() {
     override fun priority(): Int = 999
 
     var title: String = ""
@@ -21,6 +21,14 @@ class NewChatWithCodeIntention : AbstractChatIntention() {
 
         this.title = computeTitle(project, file, getCurrentSelectionAsRange(editor))
         return true
+    }
+
+    open fun getPrePrompt(): String {
+        return ""
+    }
+
+    open fun filterSelectedText(selectedText:String) :String{
+        return  selectedText;
     }
 
     override fun invoke(project: Project, editor: Editor?, file: PsiFile?) {
@@ -40,8 +48,10 @@ class NewChatWithCodeIntention : AbstractChatIntention() {
 
         val language = file.language.displayName
 
+        selectedText = filterSelectedText(selectedText)
+
         sendToChatWindow(project, ChatActionType.CHAT) { contentPanel, _ ->
-            contentPanel.setInput("\n```$language\n$selectedText\n```")
+            contentPanel.setInput(getPrePrompt() + "\n```$language\n$selectedText\n```")
         }
     }
 

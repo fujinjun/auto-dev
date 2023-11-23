@@ -18,7 +18,9 @@ enum class ChatActionType {
     CUSTOM_COMPLETE,
     CUSTOM_ACTION,
     COUNIT,
-    CODE_REVIEW
+    CODE_REVIEW,
+    DDD,
+    PUML
     ;
 
     override fun toString(): String {
@@ -71,6 +73,8 @@ $diff
                     "Make sure JSON contains real business logic, not just data structure. \n" +
                     "For example, if the code is a function that returns a list of users, " +
                     "the JSON should contain a list of users, not just a list of user objects."
+            DDD -> "Give me some suggestions to make this method match the DDD design:"
+            PUML -> "Generate PUML for this class:"
         }
     }
 }

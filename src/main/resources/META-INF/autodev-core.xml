@@ -2,6 +2,7 @@
     <resource-bundle>messages.AutoDevBundle</resource-bundle>
 
     <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.java</depends>
     <depends>Git4Idea</depends>
 
     <extensions defaultExtensionNs="com.intellij">
@@ -176,6 +177,15 @@
                     class="cc.unitmesh.devti.actions.chat.ChatBotExplainAction" text="Explain This"
                     description="Ask AI about this code">
             </action>
+            <action id="cc.unitmesh.devti.actions.chat.ChatBotDDDAction"
+                    class="cc.unitmesh.devti.actions.chat.ChatBotDDDAction" text="DDD Design analysis"
+                    description="Ask AI about this code">
+            </action>
+
+            <action id="cc.unitmesh.devti.actions.chat.ChatBotPUMLAction"
+                    class="cc.unitmesh.devti.actions.chat.ChatBotPUMLAction" text="Generate PUML"
+                    description="Ask AI about this code">
+            </action>
 
             <action id="cc.unitmesh.devti.actions.chat.ChatBotRefactorAction"
                     class="cc.unitmesh.devti.actions.chat.ChatBotRefactorAction" text="Refactor This"
@@ -242,12 +252,12 @@
             <add-to-group group-id="Vcs.Log.ContextMenu" relative-to-action="Vcs.ShowDiffWithLocal" anchor="after"/>
         </action>
 
-        <action id="cc.unitmesh.devti.actions.chat.CodeCompleteChatAction"
-                class="cc.unitmesh.devti.actions.chat.CodeCompleteChatAction" text="Code Complete (AutoDev)"
-                description="Ask AI about this code">
+<!--        <action id="cc.unitmesh.devti.actions.chat.CodeCompleteChatAction"-->
+<!--                class="cc.unitmesh.devti.actions.chat.CodeCompleteChatAction" text="Code Complete (AutoDev)"-->
+<!--                description="Ask AI about this code">-->
 
-            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
-        </action>
+<!--            <add-to-group group-id="EditorPopupMenu" anchor="first"/>-->
+<!--        </action>-->
 
         <group id="AutoDev.ToolWindow.Snippet.Toolbar">
             <action id="AutoDev.ToolWindow.Snippet.LanguageLabelAction"

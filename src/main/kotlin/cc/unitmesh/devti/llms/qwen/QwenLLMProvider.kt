@@ -44,8 +44,8 @@ class QwenLLMProvider(val project: Project) : LLMProvider {
     private val autoDevSettingsState = AutoDevSettingsState.getInstance()
 
     private val key get() = autoDevSettingsState.customEngineToken
-    private val msgManager = MessageManager(10)
-
+    private var msgManager = MessageManager(10)
+    private val gen = Generation()
     private val maxTokenLength: Int
         get() = AutoDevSettingsState.getInstance().fetchMaxTokenLength()
 
@@ -87,11 +87,9 @@ class QwenLLMProvider(val project: Project) : LLMProvider {
     @Throws(NoApiKeyException::class, ApiException::class, InputRequiredException::class)
     fun callWithMessage(promptText: String): GenerationResult? {
 
-        val gen = Generation()
-
         historyMessageLength += promptText.length
         if (historyMessageLength > maxTokenLength) {
-            msgManager.get().clear()
+            msgManager = MessageManager(10)
         }
 
         val msg = Message()
@@ -110,7 +108,7 @@ class QwenLLMProvider(val project: Project) : LLMProvider {
     @Throws(NoApiKeyException::class, ApiException::class, InputRequiredException::class)
     fun streamCallWithMessage(promptText: String): Flowable<GenerationResult>? {
 
-        val gen = Generation()
+
         historyMessageLength += promptText.length
         if (historyMessageLength > maxTokenLength) {
             msgManager.get().clear()
