@@ -110,9 +110,9 @@ class QwenLLMProvider(val project: Project) : LLMProvider {
 
 
         historyMessageLength += promptText.length
-        if (historyMessageLength > maxTokenLength) {
-            msgManager.get().clear()
-        }
+//        if (historyMessageLength > maxTokenLength) {
+            msgManager = MessageManager(10)
+//        }
         val msg = Message()
         msg.role = "user"
         msg.content = promptText
