@@ -23,7 +23,6 @@ class MessageView(private val message: String, val role: ChatRole, private val d
     JBPanel<MessageView>() {
     private val myNameLabel: Component
     private val component: DisplayComponent = DisplayComponent(message)
-    private var answer: String? = null
     private var centerPanel: JPanel = JPanel(VerticalLayout(JBUI.scale(8)))
 
     init {
@@ -105,7 +104,9 @@ class MessageView(private val message: String, val role: ChatRole, private val d
         MessageWorker(content).execute()
     }
 
-    fun updateSourceContent(source: String?) {
+
+    private var answer: String = ""
+    fun updateSourceContent(source: String) {
         answer = source
     }
 
@@ -118,7 +119,6 @@ class MessageView(private val message: String, val role: ChatRole, private val d
 
     fun reRenderAssistantOutput() {
         ApplicationManager.getApplication().invokeLater {
-            val displayText = component.text
 
             centerPanel.remove(component)
             centerPanel.updateUI()
@@ -126,7 +126,7 @@ class MessageView(private val message: String, val role: ChatRole, private val d
             centerPanel.add(myNameLabel)
             centerPanel.add(createTitlePanel())
 
-            val message = SimpleMessage(displayText, displayText, ChatRole.Assistant)
+            val message = SimpleMessage(answer, answer, ChatRole.Assistant)
             renderInPartView(message)
 
             centerPanel.revalidate()

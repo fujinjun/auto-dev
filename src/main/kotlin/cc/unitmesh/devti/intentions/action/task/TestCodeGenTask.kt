@@ -7,13 +7,10 @@ import cc.unitmesh.devti.intentions.action.AutoTestThisIntention
 import cc.unitmesh.devti.llms.LlmFactory
 import cc.unitmesh.devti.parser.parseCodeFromString
 import cc.unitmesh.devti.provider.WriteTestService
-import cc.unitmesh.devti.provider.context.TestFileContext
-import cc.unitmesh.devti.provider.context.ChatContextItem
-import cc.unitmesh.devti.provider.context.ChatContextProvider
-import cc.unitmesh.devti.provider.context.ChatCreationContext
-import cc.unitmesh.devti.provider.context.ChatOrigin
+import cc.unitmesh.devti.provider.context.*
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ReadAction
+import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.progress.ProgressIndicator
@@ -21,6 +18,7 @@ import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.runBlocking
@@ -50,16 +48,7 @@ class TestCodeGenTask(val request: TestCodeGenRequest) :
             return
         }
 
-        var prompter = if (testContext.isNewFile) {
-            """Write unit test for following code. 
-                                    |You MUST return code only, not explain.
-                                    |""".trimMargin()
-        } else {
-            """Write unit test for following code. 
-                                    |You MUST return method code only, no explain.
-                                    |You MUST return start with @Test annotation.
-                                    |""".trimMargin()
-        }
+        var prompter = "Write unit test for following code. "
 
         indicator.text = AutoDevBundle.message("intentions.chat.code.test.step.collect-context")
         indicator.fraction = 0.3
@@ -93,10 +82,10 @@ class TestCodeGenTask(val request: TestCodeGenRequest) :
         if (testContext.currentClass != null) {
             prompter += "\n"
             prompter += "// here is current class information:\n"
-            prompter += testContext.currentClass.format()
+            prompter += runReadAction { testContext.currentClass.format() }
         }
 
-        prompter += "\n```${lang.lowercase()}\n${request.selectText}\n```\n"
+        prompter += "\n```${lang.lowercase()}\nCode:\n${request.selectText}\n```\n"
         prompter += if (!testContext.isNewFile) {
             "Start test code with `@Test` syntax here:  \n"
         } else {
@@ -109,7 +98,7 @@ class TestCodeGenTask(val request: TestCodeGenRequest) :
         logger<AutoTestThisIntention>().info("Prompt: $prompter")
 
         indicator.fraction = 0.8
-        indicator.text = AutoDevBundle.message("intentions.chat.code.test.step.prompt")
+        indicator.text = AutoDevBundle.message("intentions.request.background.process.title")
 
         runBlocking {
             writeTestToFile(request.project, flow, testContext)
@@ -119,13 +108,16 @@ class TestCodeGenTask(val request: TestCodeGenRequest) :
         }
     }
 
+    @OptIn(InternalCoroutinesApi::class)
     private suspend fun writeTestToFile(
         project: Project,
         flow: Flow<String>,
         context: TestFileContext,
     ) {
         val suggestion = StringBuilder()
-        flow.collect(suggestion::append)
+        flow.collect {
+            suggestion.append(it)
+        }
 
         logger.info("LLM suggestion: $suggestion")
 

@@ -94,7 +94,8 @@ public class BlogService {
 
         assertEquals(
             classContext.format(),
-            """class BlogController {
+            """'package: cc.unitmesh.untitled.demo.controller.BlogController
+class BlogController {
   blogService
   + public BlogController(BlogService blogService)
   + @PostMapping("/blog")     public BlogPost createBlog(CreateBlogDto blogDto)
